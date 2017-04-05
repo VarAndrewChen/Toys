@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dice</title>
+    <style>
+    html,
+    body,
+    ul,
+    li {
+        box-sizing: border-box;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        display: flex;
+        background-color: skyblue;
+        perspective: 1000px;
+    }
+    
+    button {
+        font: 16px "microsoft yahei";
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        width: 100px;
+        height: 34px;
+        margin-left: -50px;
+    }
+    
+    .dice {
+        width: 200px;
+        height: 200px;
+        margin: auto;
+        transition: all 3s;
+        /*transform: rotateX(-45deg) rotateY(30deg);*/
+        transform-style: preserve-3d;
+    }
+    
+    ul {
+        position: absolute;
+        display: flex;
+        width: 202px;
+        height: 202px;
+        padding: 25px;
+        border: 1px solid #ccc;
+        list-style: none;
+        background-color: rgba(80, 80, 80, 0.8);
+        align-content: space-around;
+        flex-flow: wrap;
+        justify-content: space-around;
+    }
+    
+    li {
+        width: 30px;
+        height: 30px;
+        margin: 10px;
+        border-radius: 50%;
+        background-color: #d32f2f;
+    }
+    
+    ul:nth-child(2) {
+        padding: 25px 15px;
+    }
+    
+    ul:nth-child(2) li:nth-child(3) {
+        margin: 10px 60px;
+    }
+    
+    ul:nth-child(3) li {
+        margin: 20px;
+    }
+    
+    ul:nth-child(4) li:nth-child(2) {
+        align-self: center;
+    }
+    
+    ul:nth-child(4) li:nth-child(3) {
+        align-self: flex-end;
+    }
+    
+    ul:nth-child(5) {
+        padding: 30px;
+    }
+    
+    ul:nth-child(5) li:nth-child(2) {
+        align-self: flex-end;
+    }
+    
+    ul:nth-child(6) li {
+        margin: auto;
+    }
+    
+    ul:nth-child(1) {
+        transform: rotateX(-90deg) translateZ(100px);
+    }
+    
+    ul:nth-child(6) {
+        transform: rotateX(90deg) translateZ(100px);
+    }
+    
+    ul:nth-child(2) {
+        transform: rotateY(180deg) translateZ(100px);
+    }
+    
+    ul:nth-child(5) {
+        transform: rotateY(0deg) translateZ(100px);
+    }
+    
+    ul:nth-child(3) {
+        transform: rotateY(90deg) translateZ(100px);
+    }
+    
+    ul:nth-child(4) {
+        transform: rotateY(-90deg) translateZ(100px);
+    }
+    </style>
+    <script>
+    onload = function() {
+        let btn = document.querySelector("button");
+        let dice = document.querySelector(".dice");
+        let lastRolls = 0;
+
+        function throwDice(rolls, num) {
+            let degs = [{
+                x: 0,
+                y: 0
+            }, {
+                x: 90,
+                y: 0
+            }, {
+                x: 0,
+                y: 90
+            }, {
+                x: 0,
+                y: -90
+            }, {
+                x: -90,
+                y: 0
+            }, {
+                x: 180,
+                y: 0
+            }, ]
+            dice.style.transform =
+                "rotateX(" + (360 * rolls + degs[num].x) + "deg) " +
+                "rotateY(" + (360 * rolls + degs[num].y) + "deg)";
+        }
+        btn.onclick = function() {
+            var rolls = Math.floor(Math.random() * 4) + 1;
+            lastRolls = rolls = lastRolls === rolls ? rolls + 1 : rolls;
+            var num = Math.floor(Math.random() * 6);
+            throwDice(rolls, num);
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <button>666</button>
+    <div class="dice">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <ul>
+            <li></li>
+            <li></li>
+        </ul>
+        <ul>
+            <li></li>
+        </ul>
+    </div>
+</body>
+
+</html>
