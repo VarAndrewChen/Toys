@@ -1,0 +1,23 @@
+{
+  "name": "toys",
+  "version": "1.0.0",
+  "description": "some boring things",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VarAndrewChen/Toys.git"
+  },
+  "author": "varandrewchen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VarAndrewChen/Toys/issues"
+  },
+  "homepage": "https://github.com/VarAndrewChen/Toys#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}

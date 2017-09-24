@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style media="screen">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            display: none;
+        }
+
+        #drawing2 {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<canvas id="drawing" width="200" height="200">A drawing of something.</canvas>
+<canvas id="drawing2" width="8000" height="8000">A drawing of something.</canvas>
+<img src="img/beauty.jpg" alt="">
+<script type="text/javascript">
+    window.onload = function () {
+        var drawing = document.getElementById("drawing");
+        drawing.width = window.innerWidth - 5;
+        drawing.height = window.innerHeight - 5;
+        var drawing2 = document.getElementById('drawing2');
+        var context2 = drawing2.getContext('2d');
+        var context = drawing.getContext("2d"),
+            image = document.images[0],
+            imageData, data,
+            len;
+        context2.drawImage(image, 0, 0);
+        context.drawImage(image, 0, 0);
+
+
+        var h = 10;
+        var w = 10;
+        var area=0;
+        var wb =0;
+        var hb =0;
+        var cookies = [];
+        init();
+
+
+        var step = 0;
+        document.onclick = function () {
+            step++;
+            switch (step) {
+                case 1:
+                    step1();
+                    break;
+                case 2:
+                    step2();
+                    break;
+                case 3:
+                    step3();
+                    break;
+                case 4:
+                    step4();
+                    break;
+                case 5:
+                    step5();
+                    break;
+                case 6:
+                    step6();
+                    break;
+                default:
+                    location.reload();
+            }
+        };
+
+        function init() {
+            area = h * w;
+            wb = Math.floor(image.width / w);
+            hb = Math.floor(image.height / h);
+            cookies = [];
+            var red = 0;
+            var green = 0;
+            var blue = 0;
+            for (var i = 0; i < hb; i++) {
+                for (var j = 0; j < wb; j++) {
+                    imageData = context2.getImageData(w * j, h * i, w, h);
+                    data = imageData.data;
+                    for (k = 0, len = data.length; k < len; k += 4) {
+                        red += data[k];
+                        green += data[k + 1];
+                        blue += data[k + 2];
+                    }
+                    red = Math.floor(red / area);
+                    green = Math.floor(green / area);
+                    blue = Math.floor(blue / area);
+
+                    var cookie = {};
+                    cookie.fillStyle = 'rgba(' + red + ',' + green + ',' + blue + ',1)';
+                    cookie.randomX = Math.round(window.innerWidth * Math.random());
+                    cookie.randomY = Math.round(window.innerHeight * Math.random());
+                    cookie.x = Math.round(w * j + 0.5 * w);
+                    cookie.y = Math.round(h * i + 0.5 * h);
+                    cookie.r = Math.round(w / 2);
+                    cookies.push(cookie);
+
+                }
+                red = 0;
+                green = 0;
+                blue = 0;
+            }
+        }
+
+        function step1() {
+            var c = 0;
+            var clockwise = true;
+            setTimeout(function () {
+                for (var j = 0; j < wb; j++) {
+                    var cookie = cookies[c];
+                    context.clearRect(cookie.x - w / 2, cookie.y - h / 2, w, h);
+                    context.beginPath();
+                    context.strokeStyle = cookie.fillStyle;
+                    context.arc(cookie.x, cookie.y, cookie.r, 0, Math.PI, clockwise = !clockwise);
+                    context.stroke();
+                    ++c;
+                }
+                if (c === cookies.length) {
+                    return;
+                }
+                setTimeout(arguments.callee, 30);
+            }, 0);
+        }
+
+        function step2() {
+            var c = 0;
+            var clockwise = false;
+            setTimeout(function () {
+                for (var j = 0; j < wb; j++) {
+                    var cookie = cookies[c];
+                    context.beginPath();
+                    context.strokeStyle = cookie.fillStyle;
+                    context.arc(cookie.x, cookie.y, cookie.r, 0, Math.PI, clockwise = !clockwise);
+                    context.stroke();
+                    ++c;
+                }
+                if (c === cookies.length) {
+                    return;
+                }
+                setTimeout(arguments.callee, 30);
+            }, 0);
+        }
+
+        function step3() {
+            var c = 0;
+            setTimeout(function () {
+                for (var j = 0; j < wb; j++) {
+                    var cookie = cookies[c];
+                    context.clearRect(cookie.x - w / 2, cookie.y - h / 2, w, h);
+                    context.beginPath();
+                    context.fillStyle = cookie.fillStyle;
+                    context.arc(cookie.x, cookie.y, cookie.r, 0, 2 * Math.PI, true);
+                    context.fill();
+                    ++c;
+                }
+                if (c === cookies.length) {
+                    return;
+                }
+                setTimeout(arguments.callee, 30);
+            }, 0);
+        }
+
+        function step4() {
+            setTimeout(function () {
+                var flag = true;
+                for (var i = 0; i < cookies.length; i++) {
+                    var targetX = cookies[i].randomX;
+                    var targetY = cookies[i].randomY;
+                    var leaderX = cookies[i].x;
+                    var leaderY = cookies[i].y;
+                    var stepX = (targetX - leaderX) / 10;
+                    var stepY = (targetY - leaderY) / 10;
+                    stepX = stepX > 0 ? Math.ceil(stepX) : Math.floor(stepX);
+                    stepY = stepY > 0 ? Math.ceil(stepY) : Math.floor(stepY);
+                    leaderX = leaderX + stepX;
+                    leaderY = leaderY + stepY;
+                    cookies[i].x = leaderX;
+                    cookies[i].y = leaderY;
+                    if (cookies[i].randomY !== cookies[i].y ||
+                        cookies[i].randomX !== cookies[i].x) {
+                        flag = false;
+                    }
+                }
+                if (flag) {
+                    return;
+                }
+                context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                for (var i = 0; i < cookies.length; i++) {
+                    context.beginPath();
+                    context.fillStyle = cookies[i].fillStyle;
+                    context.arc(cookies[i].x, cookies[i].y, cookies[i].r, 0, 2 * Math.PI, false);
+                    context.fill();
+                }
+                setTimeout(arguments.callee, 10);
+            }, 0);
+        }
+
+        function step5() {
+            h=5;
+            w=5;
+            init();
+            context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                for (var i = 0; i < cookies.length; i++) {
+                    context.beginPath();
+                    context.fillStyle = cookies[i].fillStyle;
+                    context.arc(cookies[i].randomX, cookies[i].randomY, cookies[i].r, 0, 2 * Math.PI, false);
+                    context.fill();
+                }
+        }
+        function step6() {
+            setTimeout(function () {
+                var flag = true;
+                for (var i = 0; i < cookies.length; i++) {
+                    var leaderX = cookies[i].randomX;
+                    var leaderY = cookies[i].randomY;
+                    var targetX = cookies[i].x;
+                    var targetY = cookies[i].y;
+                    var stepX = (targetX - leaderX) / 10;
+                    var stepY = (targetY - leaderY) / 10;
+                    stepX = stepX > 0 ? Math.ceil(stepX) : Math.floor(stepX);
+                    stepY = stepY > 0 ? Math.ceil(stepY) : Math.floor(stepY);
+                    leaderX = leaderX + stepX;
+                    leaderY = leaderY + stepY;
+                    cookies[i].randomX = leaderX;
+                    cookies[i].randomY = leaderY;
+                    if (cookies[i].randomY !== cookies[i].y ||
+                        cookies[i].randomX !== cookies[i].x) {
+                        flag = false;
+                    }
+                }
+                if (flag) {
+                    context.drawImage(image, 0, 0);
+                    return;
+                }
+                for (var i = 0; i < cookies.length; i++) {
+                    context.beginPath();
+                    context.fillStyle = cookies[i].fillStyle;
+                    context.arc(cookies[i].randomX, cookies[i].randomY, cookies[i].r, 0, 2 * Math.PI, false);
+                    context.fill();
+                }
+                setTimeout(arguments.callee, 10);
+            }, 0);
+        }
+
+    };
+
+
+</script>
+</body>
+
+</html>
